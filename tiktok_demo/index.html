@@ -3,101 +3,139 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Suomivisa TikTok Integration Demo</title>
+    <title>Suomivisa — TikTok App Demo</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
     <style>
         body {
             font-family: Arial, sans-serif;
             background: #fafafa;
-            padding: 40px;
-            max-width: 600px;
-            margin: auto;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: 40px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
         }
 
         h1 {
-            color: #111;
-        }
-
-        .box {
-            background: white;
-            border-radius: 10px;
-            padding: 25px;
-            margin-top: 20px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            color: #fe2c55;
+            text-align: center;
         }
 
         button {
             background: #fe2c55;
             color: white;
             border: none;
-            padding: 12px 22px;
-            margin-top: 15px;
-            border-radius: 6px;
-            cursor: pointer;
+            padding: 14px 22px;
+            border-radius: 8px;
             font-size: 16px;
+            cursor: pointer;
+            margin-top: 12px;
         }
 
-        input[type=file] {
-            margin-top: 10px;
+        button:disabled {
+            background: #ccc;
         }
 
-        #status {
+        input[type="file"] {
             margin-top: 15px;
-            font-weight: bold;
-            color: #333;
+        }
+
+        .step {
+            margin-bottom: 40px;
+        }
+
+        .log {
+            background: #111;
+            color: #0f0;
+            padding: 15px;
+            height: 160px;
+            overflow-y: auto;
+            font-size: 14px;
+            border-radius: 8px;
+            white-space: pre-line;
         }
     </style>
 </head>
 
 <body>
-    <h1>Suomivisa — TikTok App Demo</h1>
-    <p>This demo shows the manual authentication and video upload flow required for TikTok API approval.</p>
 
-    <div class="box">
-        <h3>1. Authenticate with TikTok</h3>
-        <p>Click below to authenticate manually using the TikTok Login Kit.</p>
+    <div class="container">
+        <h1>Suomivisa — TikTok App Demo</h1>
+        <p>This demo simulates how users authenticate and upload videos through the TikTok API.</p>
 
-        <button onclick="startLogin()">Login with TikTok</button>
+        <!-- STEP 1 -->
+        <div class="step">
+            <h2>1. Authenticate with TikTok</h2>
+            <p>Click below to simulate TikTok Login Kit authentication.</p>
+            <button onclick="simulateLogin()">Login with TikTok</button>
+        </div>
 
-        <div id="status"></div>
-    </div>
+        <!-- STEP 2 -->
+        <div class="step">
+            <h2>2. Upload a video</h2>
+            <input type="file" id="videoFile" accept="video/*">
+            <button id="uploadBtn" onclick="simulateUpload()" disabled>Upload to TikTok</button>
+        </div>
 
-    <div class="box">
-        <h3>2. Upload a video</h3>
-        <input type="file" id="fileInput" accept="video/mp4,video/*"><br>
-        <button onclick="uploadVideo()">Upload to TikTok</button>
+        <!-- STEP 3 -->
+        <div class="step">
+            <h2>3. Publish video</h2>
+            <button id="publishBtn" onclick="simulatePublish()" disabled>Publish Video</button>
+        </div>
 
-        <div id="uploadStatus"></div>
+        <!-- LOG -->
+        <h3>System Log</h3>
+        <div class="log" id="logBox">Waiting for user actions…</div>
     </div>
 
     <script>
-        function startLogin() {
-            document.getElementById("status").innerHTML = "Redirecting to TikTok…";
+        const logBox = document.getElementById("logBox");
 
-            // Redirect do TikTok com o SEU client_id e callback real
-            window.location.href =
-                "https://www.tiktok.com/auth/authorize" +
-                "?client_id=sbaw75trizvy0udqol" +
-                "&response_type=code" +
-                "&scope=user.info.basic,video.upload,video.publish" +
-                "&redirect_uri=" + encodeURIComponent("https://suomivisa.com/rest/oauth2-credential/callback");
+        function log(msg) {
+            logBox.innerHTML += "\n" + msg;
+            logBox.scrollTop = logBox.scrollHeight;
         }
 
-        function uploadVideo() {
-            const file = document.getElementById("fileInput").files[0];
+        function simulateLogin() {
+            log("Opening TikTok Login Kit window...");
+            setTimeout(() => {
+                log("User authenticated successfully.");
+                document.getElementById("uploadBtn").disabled = false;
+                alert("TikTok login simulated successfully.");
+            }, 1500);
+        }
+
+        function simulateUpload() {
+            const file = document.getElementById("videoFile").files[0];
             if (!file) {
-                alert("Please choose a video first");
+                alert("Please select a video first.");
                 return;
             }
 
-            document.getElementById("uploadStatus").innerHTML =
-                "Uploading video to TikTok… (demo mode)";
+            log(`Uploading video: ${file.name}`);
+            document.getElementById("uploadBtn").disabled = true;
 
             setTimeout(() => {
-                document.getElementById("uploadStatus").innerHTML =
-                    "✔️ Video uploaded successfully (demo simulation)";
-            }, 1500);
+                log("Video uploaded. Draft ID: DRAFT_29X7AJQ1F");
+                document.getElementById("publishBtn").disabled = false;
+                alert("Video uploaded (simulated).");
+            }, 2000);
+        }
+
+        function simulatePublish() {
+            log("Publishing video...");
+            document.getElementById("publishBtn").disabled = true;
+
+            setTimeout(() => {
+                log("Video published successfully! TikTok Video ID: 928374923874");
+                alert("Video published (simulated).");
+            }, 2000);
         }
     </script>
 
