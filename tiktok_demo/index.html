@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Suomivisa TikTok Integration Demo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #fafafa;
+            padding: 40px;
+            max-width: 600px;
+            margin: auto;
+        }
+
+        h1 {
+            color: #111;
+        }
+
+        .box {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            margin-top: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        button {
+            background: #fe2c55;
+            color: white;
+            border: none;
+            padding: 12px 22px;
+            margin-top: 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        input[type=file] {
+            margin-top: 10px;
+        }
+
+        #status {
+            margin-top: 15px;
+            font-weight: bold;
+            color: #333;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Suomivisa — TikTok App Demo</h1>
+    <p>This demo shows the manual authentication and video upload flow required for TikTok API approval.</p>
+
+    <div class="box">
+        <h3>1. Authenticate with TikTok</h3>
+        <p>Click below to authenticate manually using the TikTok Login Kit.</p>
+
+        <button onclick="startLogin()">Login with TikTok</button>
+
+        <div id="status"></div>
+    </div>
+
+    <div class="box">
+        <h3>2. Upload a video</h3>
+        <input type="file" id="fileInput" accept="video/mp4,video/*"><br>
+        <button onclick="uploadVideo()">Upload to TikTok</button>
+
+        <div id="uploadStatus"></div>
+    </div>
+
+    <script>
+        function startLogin() {
+            document.getElementById("status").innerHTML = "Redirecting to TikTok…";
+
+            // Redirect do TikTok com o SEU client_id e callback real
+            window.location.href =
+                "https://www.tiktok.com/auth/authorize" +
+                "?client_id=sbaw75trizvy0udqol" +
+                "&response_type=code" +
+                "&scope=user.info.basic,video.upload,video.publish" +
+                "&redirect_uri=" + encodeURIComponent("https://suomivisa.com/rest/oauth2-credential/callback");
+        }
+
+        function uploadVideo() {
+            const file = document.getElementById("fileInput").files[0];
+            if (!file) {
+                alert("Please choose a video first");
+                return;
+            }
+
+            document.getElementById("uploadStatus").innerHTML =
+                "Uploading video to TikTok… (demo mode)";
+
+            setTimeout(() => {
+                document.getElementById("uploadStatus").innerHTML =
+                    "✔️ Video uploaded successfully (demo simulation)";
+            }, 1500);
+        }
+    </script>
+
+</body>
+
+</html>
